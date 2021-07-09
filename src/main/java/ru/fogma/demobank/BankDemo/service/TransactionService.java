@@ -2,8 +2,14 @@ package ru.fogma.demobank.BankDemo.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.fogma.demobank.BankDemo.db.AccountRepository;
-import ru.fogma.demobank.BankDemo.db.TransactionRepository;
+import ru.fogma.demobank.BankDemo.db.*;
+import ru.fogma.demobank.BankDemo.model.TransactionDTO;
+
+import javax.persistence.LockModeType;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 // https://github.com/pauldragoslav/Spring-boot-Banking/blob/main/src/main/java/com/example/paul/services/TransactionService.java
 // https://github.com/hendisantika/springboot-bank-account/blob/master/src/main/java/com/hendisantika/springbootbankaccount/domain/UserTransaction.java
@@ -15,6 +21,41 @@ public class TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    public void transfer(TransactionDTO transactionDTO) {
+        Optional<Account> sourceAccount = accountRepository.findById(transactionDTO.getSourceId());
+        Optional<Account> targetAccount = accountRepository.findById(transactionDTO.getTargetId());
+
+        if (sourceAccount.isEmpty() || targetAccount.isEmpty()) throw new RuntimeException();
+        boolean isAmountAvailable = isAmountAvailable(transactionDTO.getAmount(), sourceAccount.get().getBalance());
+        if (!isAmountAvailable) throw new RuntimeException();
+
+        var transaction = new Transaction();
+        transaction.setAmount(transactionDTO.getAmount());
+        transaction.setSourceAccountId(transactionDTO.getSourceId());
+        transaction.setTargetAccountId(transactionDTO.getTargetId());
+        transaction.setSourceAccountOwner(targetAccount.get().getAccountOwner());
+        transaction.setTransactionTime(LocalDateTime.now());
+
+        updateBalance(sourceAccount.get(), transactionDTO.getAmount());
+        transactionRepository.save(transaction, LockModeType.PESSIMISTIC_WRITE);
+        transaction.setOperation(Operation.WITHRAWAL);
+//        sourceAccount.get().;
+        Account source = new Account();
+    }
+
+    public void transferInit(TransactionDTO transactionDTO) {
+        executorService.submit(() -> transfer(transactionDTO));
+    }
+
+    private void updateBalance(Account account, double amount) {
+        account.setBalance((account.getBalance() - amount));
+        accountRepository.save(account);
+    }
+
+    private boolean isAmountAvailable(double amount, double balance) {
+        return (balance - amount) > 0;
+    }
 
 }

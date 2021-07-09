@@ -3,17 +3,18 @@ package ru.fogma.demobank.BankDemo.db;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private UUID id;
     private String accountOwner;
     private Double balance;
+    private List<Transaction> transactions;
+
 }
