@@ -2,6 +2,7 @@ CREATE TABLE account (
     id uuid not null,
     account_owner varchar(255),
     balance float8,
+    version int4,
     primary key (id)
 );
 

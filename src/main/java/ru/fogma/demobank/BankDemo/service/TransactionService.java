@@ -36,10 +36,9 @@ public class TransactionService {
         if (!isAmountAvailable) throw new RuntimeException();
 
         var transaction = new Transaction();
-        transaction.setAmount(transactionDTO.getAmount());
         transaction.setSourceAccountId(transactionDTO.getSourceId());
         transaction.setTargetAccountId(transactionDTO.getTargetId());
-        transaction.setSourceAccountOwner(targetAccount.get().getAccountOwner());
+        transaction.setAmount(transactionDTO.getAmount());
         transaction.setSourceAccountOwner(sourceAccount.get().getAccountOwner());
 
         takeFromBalance(sourceAccount.get(), transactionDTO.getAmount());

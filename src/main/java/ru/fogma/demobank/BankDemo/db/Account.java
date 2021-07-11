@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,9 @@ public class Account {
     private UUID id = randomUUID();
     private String accountOwner;
     private Double balance;
+
+    @Version
+    private Integer version;
     private transient List<Transaction> transactions;
 
     public void addTransaction(Transaction transaction) {

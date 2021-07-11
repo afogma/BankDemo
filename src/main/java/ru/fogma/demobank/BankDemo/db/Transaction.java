@@ -21,4 +21,7 @@ public class Transaction {
     private LocalDateTime transactionTime = LocalDateTime.now();
     private Operation operation;
 
+    @Version
+    private Integer version;
+
 }
