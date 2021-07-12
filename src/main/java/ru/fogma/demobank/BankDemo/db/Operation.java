@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Operation {
 
-    DEPOSIT(1), WITHRAWAL(2);
+    DEPOSIT(1), WITHDRAWAL(2);
     int id;
 
     Operation(int id) {

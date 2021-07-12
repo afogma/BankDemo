@@ -5,15 +5,12 @@ import org.springframework.stereotype.Service;
 import ru.fogma.demobank.BankDemo.db.*;
 import ru.fogma.demobank.BankDemo.model.TransactionDTO;
 
-import javax.persistence.LockModeType;
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static ru.fogma.demobank.BankDemo.db.Operation.DEPOSIT;
-import static ru.fogma.demobank.BankDemo.db.Operation.WITHRAWAL;
+import static ru.fogma.demobank.BankDemo.db.Operation.WITHDRAWAL;
 
 // https://github.com/pauldragoslav/Spring-boot-Banking/blob/main/src/main/java/com/example/paul/services/TransactionService.java
 // https://github.com/hendisantika/springboot-bank-account/blob/master/src/main/java/com/hendisantika/springbootbankaccount/domain/UserTransaction.java
@@ -40,27 +37,29 @@ public class TransactionService {
         transaction.setTargetAccountId(transactionDTO.getTargetId());
         transaction.setAmount(transactionDTO.getAmount());
         transaction.setSourceAccountOwner(sourceAccount.get().getAccountOwner());
+        transaction.setOperation(DEPOSIT);
 
-        takeFromBalance(sourceAccount.get(), transactionDTO.getAmount());
-        addToBalance(targetAccount.get(), transactionDTO.getAmount());
+        withdraw(sourceAccount.get(), transactionDTO.getAmount());
+        deposit(targetAccount.get(), transactionDTO.getAmount());
+
         transactionRepository.save(transaction);
-        transaction.setOperation(WITHRAWAL);
+        targetAccount.get().addTransaction(transaction);
+        transaction.setOperation(WITHDRAWAL);
         sourceAccount.get().addTransaction(transaction);
 
-        transaction.setOperation(DEPOSIT);
-        targetAccount.get().addTransaction(transaction);
+
     }
 
     public void transferInit(TransactionDTO transactionDTO) {
         executorService.submit(() -> transfer(transactionDTO));
     }
 
-    private void takeFromBalance(Account account, double amount) {
+    private void withdraw(Account account, double amount) {
         account.setBalance((account.getBalance() - amount));
         accountRepository.save(account);
     }
 
-    private void addToBalance(Account account, double amount) {
+    private void deposit(Account account, double amount) {
         account.setBalance((account.getBalance() + amount));
         accountRepository.save(account);
     }
