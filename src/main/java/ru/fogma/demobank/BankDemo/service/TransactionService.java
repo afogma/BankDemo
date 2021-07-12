@@ -46,8 +46,6 @@ public class TransactionService {
         targetAccount.get().addTransaction(transaction);
         transaction.setOperation(WITHDRAWAL);
         sourceAccount.get().addTransaction(transaction);
-
-
     }
 
     public void transferInit(TransactionDTO transactionDTO) {
