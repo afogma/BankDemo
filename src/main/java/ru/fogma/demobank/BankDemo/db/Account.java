@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Version;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class Account {
     @Id
     private UUID id = randomUUID();
     private String accountOwner;
-    private Double balance;
+    private BigDecimal balance;
 
     @Version
     private Integer version;
