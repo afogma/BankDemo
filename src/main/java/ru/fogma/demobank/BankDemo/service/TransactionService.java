@@ -14,9 +14,6 @@ import java.util.concurrent.Executors;
 import static java.math.BigDecimal.ZERO;
 import static ru.fogma.demobank.BankDemo.db.Operation.*;
 
-// https://github.com/pauldragoslav/Spring-boot-Banking/blob/main/src/main/java/com/example/paul/services/TransactionService.java
-// https://github.com/hendisantika/springboot-bank-account/blob/master/src/main/java/com/hendisantika/springbootbankaccount/domain/UserTransaction.java
-
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
