@@ -45,7 +45,7 @@ public class TransactionService {
 
     public void debit(UUID id, BigDecimal amount) {
         Account account = accountRepository.findById(id).orElse(null);
-        if(account == null) throw new RuntimeException();
+        if (account == null) throw new RuntimeException();
         if (account.getBalance().subtract(amount).compareTo(ZERO) < 0) throw new RuntimeException();
 
         account.setBalance(account.getBalance().subtract(amount));
@@ -54,7 +54,7 @@ public class TransactionService {
 
     public void credit(UUID id, BigDecimal amount) {
         Account account = accountRepository.findById(id).orElse(null);
-        if(account == null) throw new RuntimeException();
+        if (account == null) throw new RuntimeException();
         account.setBalance(account.getBalance().add(amount));
         accountRepository.save(account);
     }
