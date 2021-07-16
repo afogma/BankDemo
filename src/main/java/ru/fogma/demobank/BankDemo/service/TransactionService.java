@@ -6,10 +6,7 @@ import ru.fogma.demobank.BankDemo.db.*;
 import ru.fogma.demobank.BankDemo.model.TransactionDTO;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static java.math.BigDecimal.ZERO;
 import static ru.fogma.demobank.BankDemo.db.Operation.*;
