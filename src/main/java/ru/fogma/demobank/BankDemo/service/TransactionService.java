@@ -22,18 +22,18 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
 
     public void transfer(TransactionDTO transactionDTO) {
-        Optional<Account> sourceAccount = accountRepository.findById(transactionDTO.getSourceId());
-        Optional<Account> targetAccount = accountRepository.findById(transactionDTO.getTargetId());
+        Account sourceAccount = accountRepository.findById(transactionDTO.getSourceId()).orElse(null);
+        Account targetAccount = accountRepository.findById(transactionDTO.getTargetId()).orElse(null);
 
-        if (sourceAccount.isEmpty() || targetAccount.isEmpty()) throw new RuntimeException();
-        boolean isAmountAvailable = isAmountAvailable(transactionDTO.getAmount(), sourceAccount.get().getBalance());
+        if (sourceAccount == null || targetAccount == null) throw new RuntimeException();
+        boolean isAmountAvailable = isAmountAvailable(transactionDTO.getAmount(), sourceAccount.getBalance());
         if (!isAmountAvailable) throw new RuntimeException();
 
         var transaction = new Transaction();
         transaction.setSourceAccountId(transactionDTO.getSourceId());
         transaction.setTargetAccountId(transactionDTO.getTargetId());
         transaction.setAmount(transactionDTO.getAmount());
-        transaction.setSourceAccountOwner(sourceAccount.get().getAccountOwner());
+        transaction.setSourceAccountOwner(sourceAccount.getAccountOwner());
         transaction.setOperation(TRANSFER);
         transactionRepository.save(transaction);
     }
