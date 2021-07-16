@@ -21,8 +21,6 @@ public class TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-
     public void transfer(TransactionDTO transactionDTO) {
         Optional<Account> sourceAccount = accountRepository.findById(transactionDTO.getSourceId());
         Optional<Account> targetAccount = accountRepository.findById(transactionDTO.getTargetId());
@@ -59,5 +57,4 @@ public class TransactionService {
     private boolean isAmountAvailable(BigDecimal amount, BigDecimal balance) {
         return balance.subtract(amount).compareTo(ZERO) >= 0;
     }
-
 }
