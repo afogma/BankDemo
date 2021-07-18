@@ -18,7 +18,6 @@ public class Transaction {
     private UUID sourceAccountId;
     private UUID targetAccountId;
     private BigDecimal amount;
-    private String sourceAccountOwner;
     private LocalDateTime transactionTime = LocalDateTime.now();
     private Operation operation;
 

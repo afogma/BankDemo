@@ -26,20 +26,43 @@ public class TransactionService {
         boolean isAmountAvailable = isAmountAvailable(transactionDTO.getAmount(), sourceAccount.getBalance());
         if (!isAmountAvailable) throw new RuntimeException();
 
+        BigDecimal amount = transactionDTO.getAmount();
         var transaction = new Transaction();
         transaction.setSourceAccountId(transactionDTO.getSourceId());
         transaction.setTargetAccountId(transactionDTO.getTargetId());
-        transaction.setAmount(transactionDTO.getAmount());
-        transaction.setSourceAccountOwner(sourceAccount.getAccountOwner());
+        transaction.setAmount(amount);
         transaction.setOperation(TRANSFER);
+        debit(sourceAccount.getId(), amount);
+        credit(targetAccount.getId(), amount);
         transactionRepository.save(transaction);
+    }
+
+    public void deposit(UUID id, BigDecimal amount) {
+        Account account = accountRepository.findById(id).orElse(null);
+        if (account == null) throw new RuntimeException();
+        Transaction transaction = new Transaction();
+        transaction.setTargetAccountId(id);
+        transaction.setAmount(amount);
+        transaction.setOperation(DEPOSIT);
+        transactionRepository.save(transaction);
+        credit(id, amount);
+    }
+
+    public void withdraw(UUID id, BigDecimal amount) {
+        Account account = accountRepository.findById(id).orElse(null);
+        if (account == null) throw new RuntimeException();
+        Transaction transaction = new Transaction();
+        transaction.setSourceAccountId(id);
+        transaction.setAmount(amount);
+        transaction.setOperation(WITHDRAWAL);
+        transactionRepository.save(transaction);
+        debit(id, amount);
     }
 
     public void debit(UUID id, BigDecimal amount) {
         Account account = accountRepository.findById(id).orElse(null);
         if (account == null) throw new RuntimeException();
         if (!isAmountAvailable(account.getBalance(), amount)) throw new RuntimeException();
-
         account.setBalance(account.getBalance().subtract(amount));
         accountRepository.save(account);
     }
