@@ -38,7 +38,7 @@ public class TransactionService {
     public void debit(UUID id, BigDecimal amount) {
         Account account = accountRepository.findById(id).orElse(null);
         if (account == null) throw new RuntimeException();
-        if (account.getBalance().subtract(amount).compareTo(ZERO) < 0) throw new RuntimeException();
+        if (!isAmountAvailable(account.getBalance(), amount)) throw new RuntimeException();
 
         account.setBalance(account.getBalance().subtract(amount));
         accountRepository.save(account);
