@@ -1,6 +1,8 @@
 package ru.fogma.demobank.BankDemo.db;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +14,8 @@ import static java.util.UUID.randomUUID;
 
 @Entity
 @Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Account {
 
     @Id
