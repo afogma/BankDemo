@@ -38,8 +38,8 @@ public class TransactionService {
     }
 
     public void deposit(UUID id, BigDecimal amount) {
-        Account account = accountRepository.findById(id).orElse(null);
-        if (account == null) throw new RuntimeException();
+        if (!accountRepository.existsById(id)) throw new RuntimeException();
+
         Transaction transaction = new Transaction();
         transaction.setTargetAccountId(id);
         transaction.setAmount(amount);
@@ -49,8 +49,8 @@ public class TransactionService {
     }
 
     public void withdraw(UUID id, BigDecimal amount) {
-        Account account = accountRepository.findById(id).orElse(null);
-        if (account == null) throw new RuntimeException();
+        if (!accountRepository.existsById(id)) throw new RuntimeException();
+
         Transaction transaction = new Transaction();
         transaction.setSourceAccountId(id);
         transaction.setAmount(amount);
