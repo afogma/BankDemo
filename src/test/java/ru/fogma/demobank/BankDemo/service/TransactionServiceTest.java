@@ -1,16 +1,16 @@
 package ru.fogma.demobank.BankDemo.service;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.verification.VerificationMode;
 import ru.fogma.demobank.BankDemo.db.Account;
 import ru.fogma.demobank.BankDemo.db.AccountRepository;
 import ru.fogma.demobank.BankDemo.db.TransactionRepository;
 import ru.fogma.demobank.BankDemo.model.TransactionDTO;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
-import static java.util.UUID.randomUUID;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TransactionServiceTest {
@@ -29,27 +29,25 @@ class TransactionServiceTest {
     }
 
     private Account getAccountTwo() {
-        return new Account(targetUUID,"Vaska Petrushkin", new BigDecimal("22222"), 1);
+        return new Account(targetUUID, "Vaska Petrushkin", new BigDecimal("22222"), 1);
     }
 
-    private TransactionDTO getDTO() {
+    private TransactionDTO getTransactionDTO() {
         return new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("44444"));
     }
 
     @Test
     void transfer() {
-        TransactionDTO transactionDTO = getDTO();
-        System.out.println(getDTO());
-//        when(transactionDTO.getSourceId()).thenReturn(UUID.fromString("43e8a3e9-56ad-4217-87a1-17e6999ddfed"));
-        Account sourceAcc = accountRepository.getById(transactionDTO.getSourceId());
+        System.out.println(getAccountTwo());
+        System.out.println(getAccountOne());
+        TransactionDTO transactionDTO = getTransactionDTO();
+        System.out.println(transactionDTO);
+        Account accone = getAccountOne();
+        Account acctwo = getAccountTwo();
+        when(accountRepository.findById(getAccountOne().getId())).thenReturn(Optional.of(accone));
+        when(accountRepository.findById(getAccountTwo().getId())).thenReturn(Optional.of(acctwo));
 
-//        when(transactionDTO.getTargetId()).thenReturn(UUID.fromString("1e7464ea-c357-49ed-9b1f-c9e4c2b633fb"));
-        Account targetAcc = accountRepository.getById(transactionDTO.getTargetId());
-
-        transactionService.transfer(transactionDTO);
-        System.out.println(sourceAcc);
-        System.out.println(targetAcc);
-
+        transactionService.transfer(new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("44444")));
     }
 
     @Test
@@ -62,6 +60,12 @@ class TransactionServiceTest {
 
     @Test
     void debit() {
+        Account acc = getAccountOne();
+        System.out.println(acc);
+        when(accountRepository.findById(acc.getId())).thenReturn(Optional.of(acc));
+        transactionService.debit(acc.getId(), new BigDecimal("33333"));
+        BigDecimal amount = new BigDecimal("55555");
+        verify(acc.getBalance(), (VerificationMode) amount);
     }
 
     @Test
