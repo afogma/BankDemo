@@ -1,5 +1,6 @@
 package ru.fogma.demobank.BankDemo.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,13 +10,11 @@ import java.util.UUID;
 
 @Component
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TransactionDTO {
 
     private UUID sourceId;
     private UUID targetId;
     private BigDecimal amount;
 
-    public TransactionDTO(UUID id, UUID id1, BigDecimal bigDecimal) {
-    }
 }

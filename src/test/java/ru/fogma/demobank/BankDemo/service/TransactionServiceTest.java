@@ -20,22 +20,10 @@ class TransactionServiceTest {
     AccountRepository accountRepository = mock(AccountRepository.class);
     TransactionService transactionService = new TransactionService(accountRepository, transactionRepository);
 
-    private final String uuidSource = "43e8a3e9-56ad-4217-87a1-17e6999ddfed";
-    private final String uuidTarget = "eafcdcd1-8d74-4096-8d8a-fca03d6aebe6";
-    private final UUID sourceUUID = UUID.fromString(uuidSource);
-    private final UUID targetUUID = UUID.fromString(uuidTarget);
+    private final UUID sourceUUID = UUID.fromString("43e8a3e9-56ad-4217-87a1-17e6999ddfed");
+    private final UUID targetUUID = UUID.fromString("eafcdcd1-8d74-4096-8d8a-fca03d6aebe6");
 
-    private Account getAccountOne() {
-        return new Account(sourceUUID, "Petruha Vasechkin", new BigDecimal("88888"), 1);
-    }
 
-    private Account getAccountTwo() {
-        return new Account(targetUUID, "Vaska Petrushkin", new BigDecimal("22222"), 1);
-    }
-
-    private TransactionDTO getTransactionDTO() {
-        return new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("44444"));
-    }
 
     @Test
     void transfer() {
@@ -71,5 +59,17 @@ class TransactionServiceTest {
 
     @Test
     void credit() {
+    }
+
+    private Account getAccountOne() {
+        return new Account(sourceUUID, "Petruha Vasechkin", new BigDecimal("88888"), 1);
+    }
+
+    private Account getAccountTwo() {
+        return new Account(targetUUID, "Vaska Petrushkin", new BigDecimal("22222"), 1);
+    }
+
+    private TransactionDTO getTransactionDTO() {
+        return new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("44444"));
     }
 }
