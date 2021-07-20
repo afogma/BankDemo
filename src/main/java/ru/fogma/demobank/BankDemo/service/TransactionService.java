@@ -23,7 +23,7 @@ public class TransactionService {
         Account targetAccount = accountRepository.findById(transactionDTO.getTargetId()).orElse(null);
 
         if (sourceAccount == null || targetAccount == null) throw new RuntimeException();
-        boolean isAmountAvailable = isAmountAvailable(transactionDTO.getAmount(), sourceAccount.getBalance());
+        boolean isAmountAvailable = isAmountAvailable(sourceAccount.getBalance(), transactionDTO.getAmount());
         if (!isAmountAvailable) throw new RuntimeException();
 
         BigDecimal amount = transactionDTO.getAmount();
@@ -74,7 +74,7 @@ public class TransactionService {
         accountRepository.save(account);
     }
 
-    private boolean isAmountAvailable(BigDecimal amount, BigDecimal balance) {
+    private boolean isAmountAvailable(BigDecimal balance, BigDecimal amount) {
         return balance.subtract(amount).compareTo(ZERO) >= 0;
     }
 }

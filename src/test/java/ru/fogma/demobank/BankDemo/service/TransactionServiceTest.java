@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class TransactionServiceTest {
@@ -65,7 +66,7 @@ class TransactionServiceTest {
         when(accountRepository.findById(acc.getId())).thenReturn(Optional.of(acc));
         transactionService.debit(acc.getId(), new BigDecimal("33333"));
         BigDecimal amount = new BigDecimal("55555");
-        verify(acc.getBalance(), (VerificationMode) amount);
+        assertEquals(acc.getBalance(), amount);
     }
 
     @Test
