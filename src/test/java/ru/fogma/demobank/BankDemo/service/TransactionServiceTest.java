@@ -6,11 +6,14 @@ import ru.fogma.demobank.BankDemo.db.AccountRepository;
 import ru.fogma.demobank.BankDemo.db.TransactionRepository;
 import ru.fogma.demobank.BankDemo.model.TransactionDTO;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class TransactionServiceTest {
@@ -61,6 +64,17 @@ class TransactionServiceTest {
         BigDecimal amount = new BigDecimal("33333");
         assertEquals(acc.getBalance(), amount);
     }
+
+    @Test
+    public void should_throw_optimistic_lock_exception() {
+        Account account = getAccountOne();
+//        when(cabinetRepo.findByNumber(333)).thenThrow(new CabinetAlreadyExistException());
+//        assertThrows(CabinetAlreadyExistException.class, () -> cabinetRepo.findByNumber(cabinet.getNumber()));
+
+
+
+    }
+
 
     private Account getAccountOne() {
         return new Account(sourceUUID, "Petruha Vasechkin", new BigDecimal("88888"), 1);
