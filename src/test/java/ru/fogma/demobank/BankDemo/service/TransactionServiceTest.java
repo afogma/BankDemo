@@ -1,7 +1,6 @@
 package ru.fogma.demobank.BankDemo.service;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.verification.VerificationMode;
 import ru.fogma.demobank.BankDemo.db.Account;
 import ru.fogma.demobank.BankDemo.db.AccountRepository;
 import ru.fogma.demobank.BankDemo.db.TransactionRepository;
@@ -27,16 +26,14 @@ class TransactionServiceTest {
 
     @Test
     void transfer() {
-        System.out.println(getAccountTwo());
-        System.out.println(getAccountOne());
         TransactionDTO transactionDTO = getTransactionDTO();
-        System.out.println(transactionDTO);
-        Account accone = getAccountOne();
-        Account acctwo = getAccountTwo();
-        when(accountRepository.findById(getAccountOne().getId())).thenReturn(Optional.of(accone));
-        when(accountRepository.findById(getAccountTwo().getId())).thenReturn(Optional.of(acctwo));
+        Account source = getAccountOne();
+        Account target = getAccountTwo();
+        when(accountRepository.findById(getAccountOne().getId())).thenReturn(Optional.of(source));
+        when(accountRepository.findById(getAccountTwo().getId())).thenReturn(Optional.of(target));
 
         transactionService.transfer(new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("44444")));
+
     }
 
     @Test
@@ -50,7 +47,6 @@ class TransactionServiceTest {
     @Test
     void debit() {
         Account acc = getAccountOne();
-        System.out.println(acc);
         when(accountRepository.findById(acc.getId())).thenReturn(Optional.of(acc));
         transactionService.debit(acc.getId(), new BigDecimal("33333"));
         BigDecimal amount = new BigDecimal("55555");
@@ -59,6 +55,11 @@ class TransactionServiceTest {
 
     @Test
     void credit() {
+        Account acc = getAccountTwo();
+        when(accountRepository.findById(acc.getId())).thenReturn(Optional.of(acc));
+        transactionService.credit(acc.getId(), new BigDecimal("11111"));
+        BigDecimal amount = new BigDecimal("33333");
+        assertEquals(acc.getBalance(), amount);
     }
 
     private Account getAccountOne() {
