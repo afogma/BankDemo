@@ -19,11 +19,6 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
 
     public void transfer(TransactionDTO transactionDTO) {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         Account sourceAccount = accountRepository.findById(transactionDTO.getSourceId()).orElse(null);
         Account targetAccount = accountRepository.findById(transactionDTO.getTargetId()).orElse(null);
 

@@ -8,6 +8,7 @@ import ru.fogma.demobank.BankDemo.model.TransactionDTO;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,8 +25,6 @@ class TransactionServiceTest {
 
     private final UUID sourceUUID = UUID.fromString("43e8a3e9-56ad-4217-87a1-17e6999ddfed");
     private final UUID targetUUID = UUID.fromString("eafcdcd1-8d74-4096-8d8a-fca03d6aebe6");
-
-
 
     @Test
     void transfer() {
@@ -67,12 +66,10 @@ class TransactionServiceTest {
 
     @Test
     public void should_throw_optimistic_lock_exception() {
-        Account account = getAccountOne();
-//        when(cabinetRepo.findByNumber(333)).thenThrow(new CabinetAlreadyExistException());
-//        assertThrows(CabinetAlreadyExistException.class, () -> cabinetRepo.findByNumber(cabinet.getNumber()));
-
-
-
+        insertAccounts();
+        for (int i = 0; i < 10; i++) {
+            new Thread(() -> transactionService.transfer(getTransactionDTO())).start();
+        }
     }
 
 
@@ -85,6 +82,12 @@ class TransactionServiceTest {
     }
 
     private TransactionDTO getTransactionDTO() {
-        return new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("44444"));
+        return new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("1"));
+    }
+
+    private void insertAccounts() {
+        accountRepository.save(getAccountOne());
+        accountRepository.save(getAccountTwo());
+        accountRepository.flush();
     }
 }
