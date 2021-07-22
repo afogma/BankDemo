@@ -3,11 +3,10 @@ package ru.fogma.demobank.BankDemo.service;
 import org.junit.jupiter.api.Test;
 import ru.fogma.demobank.BankDemo.db.Account;
 import ru.fogma.demobank.BankDemo.db.AccountRepository;
+import ru.fogma.demobank.BankDemo.db.AccountRepositoryTest;
 import ru.fogma.demobank.BankDemo.db.TransactionRepository;
 import ru.fogma.demobank.BankDemo.model.TransactionDTO;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -21,6 +20,7 @@ class TransactionServiceTest {
 
     TransactionRepository transactionRepository = mock(TransactionRepository.class);
     AccountRepository accountRepository = mock(AccountRepository.class);
+    AccountRepositoryTest accountRepositoryTest = mock(AccountRepositoryTest.class);
     TransactionService transactionService = new TransactionService(accountRepository, transactionRepository);
 
     private final UUID sourceUUID = UUID.fromString("43e8a3e9-56ad-4217-87a1-17e6999ddfed");
@@ -35,7 +35,6 @@ class TransactionServiceTest {
         when(accountRepository.findById(getAccountTwo().getId())).thenReturn(Optional.of(target));
 
         transactionService.transfer(new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("44444")));
-
     }
 
     @Test
@@ -65,6 +64,7 @@ class TransactionServiceTest {
     }
 
     @Test
+    @Transactional
     public void should_throw_optimistic_lock_exception() {
         insertAccounts();
         for (int i = 0; i < 10; i++) {
