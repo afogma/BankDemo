@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AccountRepositoryTest {
 
     @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:13.2")
+    public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
             .withDatabaseName("banking")
             .withUsername("postgres")
             .withPassword("pgadmin");
