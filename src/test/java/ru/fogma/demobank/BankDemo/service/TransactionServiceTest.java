@@ -28,7 +28,9 @@ class TransactionServiceTest {
     TransactionService transactionService = new TransactionService(accountRepository, transactionRepository);
 
     private final UUID sourceUUID = UUID.fromString("43e8a3e9-56ad-4217-87a1-17e6999ddfed");
+//    private final UUID sourceUUID = UUID.fromString("43923e92-5d18-49de-91a8-0fb28bfa0d08");
     private final UUID targetUUID = UUID.fromString("eafcdcd1-8d74-4096-8d8a-fca03d6aebe6");
+//    private final UUID targetUUID = UUID.fromString("b9661cce-b839-4d78-be7a-fc865480fedc");
 
     @Test
     void transfer() {
@@ -68,18 +70,18 @@ class TransactionServiceTest {
     }
 
     @Test
-    @Transactional
+//    @Transactional
     public void should_throw_optimistic_lock_exception() {
         insertAccounts();
         for (int i = 0; i < 10; i++) {
-//            new Thread(() -> transactionService.transfer(getTransactionDTO())).start();
-            new Thread(() -> accountRepository.updateAccountBalanceByUUID(sourceUUID, new BigDecimal("11111"))).start();
+            new Thread(() -> transactionService.transfer(getTransactionDTO())).start();
+//            new Thread(() -> accountRepository.updateAccountBalanceByUUID(sourceUUID, new BigDecimal("11111"))).start();
 //            Runnable worker = () -> transactionService.transfer(getTransactionDTO());
 //            Runnable worker = () -> accountRepository.updateAccountBalanceByUUID(sourceUUID, new BigDecimal("11111"));
 //            executor.execute(worker);
         }
-        executor.shutdown();
-        while (!executor.isTerminated()) {}
+//        executor.shutdown();
+//        while (!executor.isTerminated()) {}
     }
 
 
