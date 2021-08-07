@@ -75,19 +75,11 @@ class TransactionServiceTest {
     }
 
     private Account getAccountOne() {
-        Account acc = new Account();
-        acc.setId(sourceUUID);
-        acc.setAccountOwner("Petruha Vasechkin");
-        acc.setBalance(new BigDecimal("88888"));
-        return acc;
+        return  new Account("Petruha Vasechkin", new BigDecimal("88888"));
     }
 
     private Account getAccountTwo() {
-        Account acc = new Account();
-        acc.setId(targetUUID);
-        acc.setAccountOwner("Vaska Petrushkin");
-        acc.setBalance(new BigDecimal("22222"));
-        return acc;
+        return new Account("Vaska Petrushkin", new BigDecimal("22222"));
     }
 
     private TransactionDTO getTransactionDTO() {
