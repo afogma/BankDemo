@@ -58,17 +58,50 @@ public class AccountRepositoryTest {
     @Test
     public void should_throw_optimistic_lock_exception() throws InterruptedException {
 
-        TransactionDTO transactionDTO =  new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("1"));
 
-        final Account acc = accountRepository.save(new Account());
+
+
+        final Account sourceAcc = accountRepository.save(new Account());
+        final Account targetceAcc = accountRepository.save(new Account());
+
+        TransactionDTO transactionDTO =  new TransactionDTO(sourceAcc.getId(), targetceAcc.getId(), BigDecimal.ONE);
+
         ExecutorService executor = Executors.newFixedThreadPool(10);
-        assertEquals(0, acc.getVersion());
+        assertEquals(0, sourceAcc.getVersion());
+        assertEquals(0, targetceAcc.getVersion());
 
         for (int i = 0; i < 10; i++) {
             executor.execute(() -> transactionService.transfer(transactionDTO));
         }
         executor.shutdown();
         executor.awaitTermination(1, TimeUnit.MINUTES);
+    }
+
+
+    private Account getAccountOne() {
+        Account acc = new Account();
+        acc.setId(sourceUUID);
+        acc.setAccountOwner("Petruha Vasechkin");
+        acc.setBalance(new BigDecimal("88888"));
+        return acc;
+    }
+
+    private Account getAccountTwo() {
+        Account acc = new Account();
+        acc.setId(targetUUID);
+        acc.setAccountOwner("Vaska Petrushkin");
+        acc.setBalance(new BigDecimal("22222"));
+        return acc;
+    }
+
+    private TransactionDTO getTransactionDTO() {
+        return new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("1"));
+    }
+
+    private void insertAccounts() {
+        accountRepository.save(getAccountOne());
+        accountRepository.save(getAccountTwo());
+        accountRepository.flush();
     }
 
 }
