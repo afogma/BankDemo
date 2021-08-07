@@ -12,16 +12,14 @@ import ru.fogma.demobank.BankDemo.db.AccountRepositoryTest;
 import ru.fogma.demobank.BankDemo.db.TransactionRepository;
 import ru.fogma.demobank.BankDemo.model.TransactionDTO;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class TransactionServiceTest {
@@ -31,7 +29,6 @@ class TransactionServiceTest {
 
     TransactionRepository transactionRepository = mock(TransactionRepository.class);
     AccountRepository accountRepository = mock(AccountRepository.class);
-    AccountRepositoryTest accountRepositoryTest = mock(AccountRepositoryTest.class);
     TransactionService transactionService = new TransactionService(accountRepository, transactionRepository);
 
     private final UUID sourceUUID = UUID.fromString("43e8a3e9-56ad-4217-87a1-17e6999ddfed");
@@ -76,41 +73,6 @@ class TransactionServiceTest {
         BigDecimal amount = new BigDecimal("33333");
         assertEquals(acc.getBalance(), amount);
     }
-
-//    @Test
-//    @Transactional
-//    public void should_throw_optimistic_lock_exception() {
-//        insertAccounts();
-//        for (int i = 0; i < 10; i++) {
-//            new Thread(() -> transactionService.transfer(getTransactionDTO())).start();
-//            new Thread(() -> accountRepository.updateAccountBalanceByUUID(sourceUUID, new BigDecimal("11111"))).start();
-//            Runnable worker = () -> transactionService.transfer(getTransactionDTO());
-//            Runnable worker = () -> accountRepository.updateAccountBalanceByUUID(sourceUUID, new BigDecimal("11111"));
-//            executor.execute(worker);
-//        }
-//        executor.shutdown();
-//        while (!executor.isTerminated()) {}
-//    }
-
-    @Test
-    public void should_throw_optimistic_lock_exception() throws InterruptedException {
-
-        TransactionDTO transactionDTO = new TransactionDTO(sourceUUID, targetUUID, new BigDecimal("1"));
-
-        final Account acc = accountRepository.save(new Account());
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-        assertEquals(0, acc.getVersion());
-
-        for (int i = 0; i < 10; i++) {
-            executor.execute(() -> transactionService.transfer(transactionDTO));
-        }
-        executor.shutdown();
-        executor.awaitTermination(1, TimeUnit.MINUTES);
-    }
-
-
-
-
 
     private Account getAccountOne() {
         Account acc = new Account();
