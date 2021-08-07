@@ -14,7 +14,7 @@ import static java.util.UUID.randomUUID;
 
 @Entity
 @Data
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Account {
 
     @Id

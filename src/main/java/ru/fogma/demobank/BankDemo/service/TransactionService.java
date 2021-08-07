@@ -2,6 +2,7 @@ package ru.fogma.demobank.BankDemo.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.fogma.demobank.BankDemo.db.*;
 import ru.fogma.demobank.BankDemo.model.TransactionDTO;
 
@@ -18,6 +19,7 @@ public class TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
+    @Transactional
     public void transfer(TransactionDTO transactionDTO) {
         Account sourceAccount = accountRepository.findById(transactionDTO.getSourceId()).orElse(null);
         Account targetAccount = accountRepository.findById(transactionDTO.getTargetId()).orElse(null);
@@ -59,17 +61,17 @@ public class TransactionService {
         debit(id, amount);
     }
 
+    @Transactional
     public void debit(UUID id, BigDecimal amount) {
-        Account account = accountRepository.findById(id).orElse(null);
-        if (account == null) throw new RuntimeException();
+        Account account = accountRepository.findById(id).orElseThrow(RuntimeException::new);
         if (!isAmountAvailable(account.getBalance(), amount)) throw new RuntimeException();
         account.setBalance(account.getBalance().subtract(amount));
         accountRepository.save(account);
     }
 
+    @Transactional
     public void credit(UUID id, BigDecimal amount) {
-        Account account = accountRepository.findById(id).orElse(null);
-        if (account == null) throw new RuntimeException();
+        Account account = accountRepository.findById(id).orElseThrow(RuntimeException::new);
         account.setBalance(account.getBalance().add(amount));
         accountRepository.save(account);
     }

@@ -24,13 +24,13 @@ public class TransactionController {
 
     @PostMapping("/transaction/withdraw")
     public ResponseEntity<String> debit(@RequestParam UUID id, BigDecimal amount) {
-        transactionService.debit(id, amount);
+        transactionService.withdraw(id, amount);
         return ResponseEntity.ok("transaction complete");
     }
 
     @PostMapping("/transaction/deposit")
     public ResponseEntity<String> credit(@RequestParam UUID id, BigDecimal amount) {
-        transactionService.credit(id, amount);
+        transactionService.deposit(id, amount);
         return ResponseEntity.ok("transaction complete");
     }
 
