@@ -25,6 +25,7 @@ public class TransactionService {
         Account targetAccount = accountRepository.findById(transactionDTO.getTargetId()).orElse(null);
 
         if (sourceAccount == null || targetAccount == null) throw new RuntimeException();
+        if (sourceAccount.getId() == targetAccount.getId()) throw new RuntimeException();
         boolean isAmountAvailable = isAmountAvailable(sourceAccount.getBalance(), transactionDTO.getAmount());
         if (!isAmountAvailable) throw new RuntimeException();
 
